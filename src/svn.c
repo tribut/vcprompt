@@ -61,7 +61,8 @@ get_branch_name(char *repos_path, char* revision)
         return strdup(name);
     }
     debug("could not find branch name in svn repos_path '%s'", repos_path);
-    return NULL;
+    // return revision instead
+    return strdup(revision);
 }
 
 

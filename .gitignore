@@ -1,0 +1,9 @@
+*~
+*.o
+/config.*
+/configure
+/Makefile
+/autom4te.cache
+/sqlite3
+/vcprompt
+/tests/*-repo*

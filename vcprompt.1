@@ -34,6 +34,11 @@ all supported version control systems.
 You can get different information by specifying a format string with
 the -f option: see \fBFORMAT STRINGS\fR below.
 
+If you want to ignore a certain repository, you can add the file
+.I vcpromptignore
+to its respective data directory (".git", ".hg", etc.).
+The first line contained in this file will be used as output.
+
 If the current directory is not under version control,
 .B vcprompt
 prints nothing and exits.
@@ -139,6 +144,11 @@ it can be slow in a large working dir.
 is supported by running "git diff --no-ext-diff --quiet --exit-code",
 so it can be slow in a large working dir.
 
+.I vcpromptignore
+is supported inside the
+.I .git
+directory.
+
 .SH MERCURIAL (HG) SUPPORT
 
 .B vcprompt
@@ -174,6 +184,11 @@ than it does to find uncommitted changes, so using
 can be considerably more expensive than just
 .B %m.
 
+.I vcpromptignore
+is supported inside the
+.I .hg
+directory.
+
 .SH SUBVERSION (SVN) SUPPORT
 
 .B vcprompt
@@ -205,6 +220,11 @@ and
 .B %m
 are not implemented.
 
+.I vcpromptignore
+is supported inside the
+.I .svn
+directory.
+
 .SH CVS SUPPORT
 
 .B vcprompt
@@ -234,6 +254,9 @@ and
 are not supported because CVS has no easy way to get that
 information.
 
+.I vcpromptignore
+is not supported because of the directory structure of CVS repositories.
+
 .SH FOSSIL SUPPORT
 
 .B vcprompt
@@ -260,6 +283,10 @@ Format specifier
 .B %u
 requires running "fossil extra", so has an extra penalty compared to
 the other format specifiers.
+
+.I .vcpromptignore
+is supported in the root directory of your checkout. Note that for
+fossil, the file name has to start with a leading dot.
 
 .SH CONFIGURING BASH
 

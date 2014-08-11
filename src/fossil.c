@@ -29,6 +29,20 @@ fossil_get_info(vccontext_t *context)
     char *t;
     int tab_len = 14;
     char buf2[81];
+    FILE *fp = NULL;
+
+    fp = fopen(".vcpromptignore", "r");
+    if (fp) {
+        debug("vcpromptignore found");
+        if (fgets(buf2, sizeof(buf2), fp) == NULL) {
+            result->ignore=strdup("");
+        } else {
+            buf2[strlen(buf2)-1] = '\0'; // remove newline
+            result->ignore=strdup(buf2);
+        }
+        fclose(fp);
+        return result;
+    }
 
     // Since fossil stores info in SQLite databases, we're going to read
     // the output of 'fossil status' command and analyze it.  We need

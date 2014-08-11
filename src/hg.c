@@ -286,6 +286,20 @@ hg_get_info(vccontext_t *context)
 {
     result_t *result = init_result();
     char buf[1024];
+    FILE *fp = NULL;
+
+    fp = fopen(".hg/vcpromptignore", "r");
+    if (fp) {
+        debug("vcpromptignore found");
+        if (fgets(buf, sizeof(buf), fp) == NULL) {
+            result->ignore=strdup("");
+        } else {
+            buf[strlen(buf)-1] = '\0'; // remove newline
+            result->ignore=strdup(buf);
+        }
+        fclose(fp);
+        return result;
+    }
 
     // prefer bookmark because it tends to be more informative
     if (read_first_line(".hg/bookmarks.current", buf, 1024) && buf[0]) {

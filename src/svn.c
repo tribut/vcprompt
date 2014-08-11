@@ -229,13 +229,26 @@ svn_get_info(vccontext_t *context)
 {
     result_t *result = init_result();
     FILE *fp = NULL;
+    char line[1024];
+
+    fp = fopen(".svn/vcpromptignore", "r");
+    if (fp) {
+        debug("vcpromptignore found");
+        if (fgets(line, sizeof(line), fp) == NULL) {
+            result->ignore=strdup("");
+        } else {
+            line[strlen(line)-1] = '\0'; // remove newline
+            result->ignore=strdup(line);
+        }
+        fclose(fp);
+        return result;
+    }
 
     fp = fopen(".svn/entries", "r");
     if (!fp) {
         debug("failed to open .svn/entries: not an svn working copy");
         goto err;
     }
-    char line[1024];
     int line_num = 1;                   // the line we're about to read
 
     if (fgets(line, sizeof(line), fp) == NULL) {

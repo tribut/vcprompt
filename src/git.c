@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <sys/wait.h>
 
 #include "git.h"
@@ -27,6 +28,20 @@ git_get_info(vccontext_t *context)
 {
     result_t *result = init_result();
     char buf[1024];
+    FILE *fp = NULL;
+
+    fp = fopen(".git/vcpromptignore", "r");
+    if (fp) {
+        debug("vcpromptignore found");
+        if (fgets(buf, sizeof(buf), fp) == NULL) {
+            result->ignore=strdup("");
+        } else {
+            buf[strlen(buf)-1] = '\0'; // remove newline
+            result->ignore=strdup(buf);
+        }
+        fclose(fp);
+        return result;
+    }
 
     if (!read_first_line(".git/HEAD", buf, 1024)) {
         debug("unable to read .git/HEAD: assuming not a git repo");

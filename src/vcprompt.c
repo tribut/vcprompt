@@ -157,6 +157,11 @@ print_result(vccontext_t *context, options_t *options, result_t *result)
     char *format = options->format;
     size_t len = strlen(format);
 
+    if (result->ignore) {
+        fputs(result->ignore, stdout);
+        return;
+    }
+
     for (i = 0; i < len; i++) {
         if (format[i] == '%') {
             i++;

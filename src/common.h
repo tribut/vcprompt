@@ -32,6 +32,7 @@ typedef struct {
     char *branch;                       /* name of current branch */
     char *revision;                     /* current revision ID */
     char *patch;                        /* name of current patch */
+    char *ignore;                       /* if set, print only this string */
     int unknown;                        /* any unknown files? */
     int modified;                       /* any local changes? */
 

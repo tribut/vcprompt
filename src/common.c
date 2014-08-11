@@ -31,6 +31,7 @@ free_result(result_t *result)
     free(result->revision);
     free(result->patch);
     free(result->full_revision);
+    free(result->ignore);
     free(result);
 }
 

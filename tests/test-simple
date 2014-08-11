@@ -329,6 +329,51 @@ test_help()
     echo "pass: help text"
 }
 
+test_vcpromptignore_svn()
+{
+   cd $tmpdir
+
+   mkdir -p vcpromptignore-svn/.svn
+   cd vcpromptignore-svn
+
+   echo "faber" > .svn/vcpromptignore
+   assert_vcprompt "vcpromptignore svn" "faber"
+}
+
+test_vcpromptignore_git()
+{
+   cd $tmpdir
+
+   mkdir -p vcpromptignore-git/.git
+   cd vcpromptignore-git
+
+   echo "dahlquist" > .git/vcpromptignore
+   assert_vcprompt "vcpromptignore git" "dahlquist"
+}
+
+test_vcpromptignore_hg()
+{
+   cd $tmpdir
+
+   mkdir -p vcpromptignore-hg/.hg
+   cd vcpromptignore-hg
+
+   echo "noether" > .hg/vcpromptignore
+   assert_vcprompt "vcpromptignore hg" "noether"
+}
+
+test_vcpromptignore_fossil()
+{
+   cd $tmpdir
+
+   mkdir vcpromptignore-fossil
+   cd vcpromptignore-fossil
+
+   touch .fslckout
+   echo "legendre" > .vcpromptignore
+   assert_vcprompt "vcpromptignore fossil" "legendre"
+}
+
 #set -e
 
 find_vcprompt
@@ -352,5 +397,9 @@ test_bad_dir
 test_env_var
 test_format_trailing_percent
 test_help
+test_vcpromptignore_svn
+test_vcpromptignore_git
+test_vcpromptignore_hg
+test_vcpromptignore_fossil
 
 report

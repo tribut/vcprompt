@@ -29,7 +29,7 @@ svn_probe(vccontext_t *context)
 }
 
 static char *
-get_branch_name(char *repos_path)
+get_branch_name(char *repos_path, char* revision)
 {
     // if repos_path endswith "trunk"
     //     return "trunk"
@@ -47,7 +47,8 @@ get_branch_name(char *repos_path)
     }
     if (slash == NULL) {
         debug("no branch in svn repos_path '%s'", repos_path);
-        return NULL;
+        // return revision instead
+        return strdup(revision);
     }
 
     // backup and see if the previous component is "branches", in which
@@ -60,7 +61,8 @@ get_branch_name(char *repos_path)
         return strdup(name);
     }
     debug("could not find branch name in svn repos_path '%s'", repos_path);
-    return NULL;
+    // return revision instead
+    return strdup(revision);
 }
 
 
@@ -127,7 +129,7 @@ svn_read_sqlite(vccontext_t *context, result_t *result)
         goto err;
     }
     repos_path = strdup(textval);
-    result->branch = get_branch_name(repos_path);
+    result->branch = get_branch_name(repos_path, result->revision);
 
     ok = 1;
 
@@ -183,8 +185,6 @@ svn_read_custom(FILE *fp, char line[], int size, int line_num, result_t *result)
         free(repos_path);
         return 0;
     }
-    result->branch = get_branch_name(repos_path + root_len + 1);
-    free(repos_path);
 
     // Lines 6 .. 10 are also uninteresting.
     while (line_num <= 11) {
@@ -199,6 +199,10 @@ svn_read_custom(FILE *fp, char line[], int size, int line_num, result_t *result)
     chop_newline(line);
     result->revision = strdup(line);
     debug("read svn revision from .svn/entries: '%s'", line);
+
+    result->branch = get_branch_name(repos_path + root_len + 1, result->revision);
+    free(repos_path);
+
     return 1;
 }
 

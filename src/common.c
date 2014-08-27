@@ -166,6 +166,7 @@ int
 read_last_line(char *filename, char *buf, int size)
 {
     FILE *file;
+    char buf2[size];
 
     file = fopen(filename, "r");
     if (file == NULL) {
@@ -174,8 +175,11 @@ read_last_line(char *filename, char *buf, int size)
     }
 
     buf[0] = '\0';
-    while (fgets(buf, size, file));
+    while (fgets(buf, size, file)) {
+        memcpy(buf2, buf, size); // work around bug in musl
+    }
     fclose(file);
+    memcpy(buf, buf2, size);
 
     if (!buf[0]) {
         debug("empty line read from '%s'", filename);
